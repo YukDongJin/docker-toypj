@@ -34,6 +34,15 @@ jobs:
           echo "🚀 Pushing image to ECR..."
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
+      - name: Register new ECS task definition
+        id: register-task-def
+        run: |
+          echo "📦 Registering new ECS Task Definition..."
+          TASK_DEF=$(aws ecs describe-task-definition --task-definition dockertoypj-nodejs-task-service-zmqxk74h)
+          NEW_TASK_DEF=$(echo $TASK_DEF | jq --arg IMAGE "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" '.taskDefinition | .containerDefinitions[0].image = $IMAGE | del(.status, .revision, .taskDefinitionArn, .requiresAttributes, .compatibilities, .registeredBy, .registeredAt)')
+          echo "$NEW_TASK_DEF" > new-task-def.json
+          aws ecs register-task-definition --cli-input-json file://new-task-def.json
+
       - name: Force new ECS deployment
         run: |
           echo "♻️ Triggering ECS service redeployment..."
