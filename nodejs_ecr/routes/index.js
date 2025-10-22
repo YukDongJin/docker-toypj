@@ -22,7 +22,7 @@ router.get("/", function(req, res){
 const TodoRouter = require('./todo/todo');
 
 // Weather Router
-//const WeatherRouter = require('./weather/weather');
+const WeatherRouter = require('./weather/weather');
 
 // Chat Router
 const ChatRouter = require('./chat/chat');
