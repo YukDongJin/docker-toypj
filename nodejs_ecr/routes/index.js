@@ -29,7 +29,7 @@ const ChatRouter = require('./chat/chat');
 
 // Refactoring
 router.use('/todo', TodoRouter);
-//router.use('/weather', WeatherRouter);
+router.use('/weather', WeatherRouter);
 router.use('/chat', ChatRouter);
 
 module.exports = router;
