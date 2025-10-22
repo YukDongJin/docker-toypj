@@ -1,0 +1,56 @@
+# =====================================
+# 📦 Node.js / Express / Socket.io
+# =====================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+
+# =====================================
+# 🧱 Build & Temp
+# =====================================
+dist/
+build/
+.tmp/
+.cache/
+coverage/
+logs/
+*.log
+
+# =====================================
+# ⚙️ Environment & Secrets
+# =====================================
+.env
+.env.local
+.env.production
+.env.development
+*.pem
+*.key
+*.crt
+*.secret
+aws_config
+aws_credentials
+
+# =====================================
+# 🐳 Docker
+# =====================================
+**/Dockerfile~
+**/.dockerignore
+docker-compose.yml
+*.pid
+*.sock
+
+# =====================================
+# 🧰 IDE / OS / Tooling
+# =====================================
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# =====================================
+# 🚀 GitHub Actions / CI Cache
+# =====================================
+.github/workflows/*.tmp
+.github/workflows/cache/

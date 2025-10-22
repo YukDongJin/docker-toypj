@@ -1,0 +1,3 @@
+FROM public.ecr.aws/docker/library/influxdb:1.8.10
+VOLUME ["/var/lib/influxdb"]
+CMD ["influxd"]

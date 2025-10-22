@@ -1,0 +1,2 @@
+FROM public.ecr.aws/ubuntu/grafana:11.6-24.04_stable
+EXPOSE 3000
