@@ -1,0 +1,35 @@
+configs:
+  telegraf_conf:
+    file: ./telegraf.conf
+
+services:
+  telegraf:
+    image: public.ecr.aws/docker/library/telegraf:1.30
+    configs:
+      - source: telegraf_conf
+        target: /etc/telegraf/telegraf.conf
+    volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+    - influxdb
+    deploy:
+      mode: global
+
+
+  grafana:
+    image: public.ecr.aws/ubuntu/grafana:11.6-24.04_stable
+    depends_on:
+    - influxdb
+    ports:
+    - 3000:3000
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+
+
+
+  influxdb:
+    image: public.ecr.aws/docker/library/influxdb:1.8.10
+    deploy:
+      placement:
+        constraints: [node.role == manager]
