@@ -27,7 +27,7 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: dockertoypj
-          IMAGE_TAG: ${{ github.sha }}
+          IMAGE_TAG: latest
         run: |
           echo "🛠️ Building Docker image with latest code.."
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./nodejs_ecr
@@ -40,5 +40,6 @@ jobs:
           aws ecs update-service \
             --cluster dockertoypj-cs \
             --service dockertoypj-nodejs-task-service-zmqxk74h \
-            --force-new-deployment
+            --force-new-deployment \
+            --region ap-northeast-2
           echo "ECS service updated successfully!"
