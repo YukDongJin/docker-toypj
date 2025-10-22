@@ -27,12 +27,13 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: dockertoypj
-          IMAGE_TAG: latest
+          IMAGE_TAG: ${{ github.sha }}
         run: |
           echo "🛠️ Building Docker image with latest code.."
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./nodejs_ecr
           echo "🚀 Pushing image to ECR..."
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
 
       - name: Register new ECS task definition
         id: register-task-def
@@ -43,12 +44,16 @@ jobs:
           echo "$NEW_TASK_DEF" > new-task-def.json
           aws ecs register-task-definition --cli-input-json file://new-task-def.json
 
-      - name: Force new ECS deployment
+
+      - name: Update ECS service to use new task definition
         run: |
-          echo "♻️ Triggering ECS service redeployment..."
+          echo "♻️ Updating ECS service to new task definition..."
+          NEW_TASK_FAMILY=$(jq -r '.family' new-task-def.json)
+          NEW_REVISION=$(aws ecs describe-task-definition --task-definition $NEW_TASK_FAMILY | jq -r '.taskDefinition.revision')
           aws ecs update-service \
             --cluster dockertoypj-cs \
             --service dockertoypj-nodejs-task-service-zmqxk74h \
+            --task-definition ${NEW_TASK_FAMILY}:${NEW_REVISION} \
             --force-new-deployment \
             --region ap-northeast-2
-          echo "ECS service updated successfully!"
+          echo "✅ ECS service updated successfully!"
